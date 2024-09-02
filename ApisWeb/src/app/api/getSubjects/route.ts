@@ -21,5 +21,5 @@ export async function POST(request: Request) {
   if (subjects.length == 0)
     return NextResponse.json({ status: "success", msg: "No Data Found" });
 
-  return NextResponse.json(subjects);
+  return NextResponse.json({ subjectData: subjects });
 }
