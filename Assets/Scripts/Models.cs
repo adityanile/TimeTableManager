@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 [System.Serializable]
 public class SubjectData
 {
@@ -17,6 +19,14 @@ public class GetSubjectPayload
 {
     public string Day;
     public string TeacherName;
+}
+
+[System.Serializable]
+public class GotSubjects
+{
+    public SubjectData[] subjectData;
+    public string msg;
+    public string status;
 }
 
 [System.Serializable]

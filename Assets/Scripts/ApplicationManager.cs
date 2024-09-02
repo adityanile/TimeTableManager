@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,10 +23,28 @@ public class ApplicationManager : MonoBehaviour
         return;
     }
 
-    public void InitSubjects(string subjectsJson)
+    public void InitSubjects(string subjectsJson, Action<String> callback)
     {
-        subjectsJson = "[{\"id\":5,\"name\":\"Toc\",\"length\":1,\"startTime\":\"10:00am\",\"division\":\"D-3\",\"branch\":\"Comp Engg\",\"teachername\":\"Ketan Desale\",\"classroom\":\"6205\",\"dayofweek\":\"Monday\"}]";
-        var subjects = JsonUtility.FromJson<IEnumerable<SubjectData>>(subjectsJson);
-        Debug.Log(subjects);
+        if (subjectsJson != null)
+        {
+            Debug.Log(subjectsJson);
+
+            var gotSubjects = JsonUtility.FromJson<GotSubjects>(subjectsJson);
+
+            if (gotSubjects.msg.Equals("No Data Found"))
+            {
+                callback(gotSubjects.msg);
+                return;
+            }
+            else
+            {
+                subjects.AddRange(gotSubjects.subjectData);
+                callback("Success !!");
+            }
+        }
+        else
+        {
+            callback("Error Connecting server");
+        }
     }
 }

@@ -6,7 +6,7 @@ import { Prisma } from "@prisma/client";
 export async function POST(request: Request) {
   const { id } = await request.json();
 
-  if (!id) return NextResponse.json({ status: "Fail", msg: "Invalid Params" });
+  if (!id) return NextResponse.json({ status: "fail", msg: "Invalid Params" });
 
   let res;
 

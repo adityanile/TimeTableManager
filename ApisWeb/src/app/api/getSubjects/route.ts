@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   const { Day, TeacherName } = await request.json();
 
   if (!Day || !TeacherName)
-    return NextResponse.json({ status: "Fail", msg: "Invalid Params" });
+    return NextResponse.json({ status: "fail", msg: "Invalid Params" });
 
   const subjects = await prisma.subjects.findMany({
     where: {
@@ -19,7 +19,11 @@ export async function POST(request: Request) {
   });
 
   if (subjects.length == 0)
-    return NextResponse.json({ status: "success", msg: "No Data Found" });
+    return NextResponse.json({ status: "fail", msg: "No Data Found" });
 
-  return NextResponse.json({ subjectData: subjects });
+  return NextResponse.json({
+    subjectData: subjects,
+    status: "success",
+    msg: "Done",
+  });
 }

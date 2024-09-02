@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const subject: SubjectData = await request.json();
 
   if (!subject)
-    return NextResponse.json({ status: "Fail", msg: "Invalid Params" });
+    return NextResponse.json({ status: "fail", msg: "Invalid Params" });
 
   let res;
 

@@ -72,13 +72,8 @@ public class WebManager : MonoBehaviour
             string res = string.Empty;
 
             if(webreq.result == UnityWebRequest.Result.Success)
-            {
                 res = webreq.downloadHandler.text;
-            }
-            else
-            {
-                res = "Error Fetching Subjects Data";
-            }
+            
             callback(res);
         }
     }
