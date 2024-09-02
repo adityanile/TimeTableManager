@@ -21,30 +21,6 @@ public class WebManager : MonoBehaviour
         
     private void Start()
     {
-        //StartCoroutine(FetchSubjects("Monday", "Ketan Desale", (e) =>
-        //{
-        //    Debug.Log(e);
-
-        //}));
-
-        //AddSubjectPayload subject = new AddSubjectPayload();
-
-        //subject.name = "Toc";
-        //subject.length = 1;
-        //subject.startTime = "10:00am";
-        //subject.division = "D-3";
-        //subject.branch = "Comp Engg";
-        //subject.classroom = "6205";
-        //subject.dayofWeek = "Monday";
-        //subject.teacherName = "Ketan Desale";
-
-        //StartCoroutine(AddSubject(subject, (e) =>
-        //{
-        //    Debug.Log(e);
-
-        //}));
-
-
         // Creating a static class instance
         if (instance == null)
         {
@@ -78,7 +54,7 @@ public class WebManager : MonoBehaviour
         }
     }
 
-    public IEnumerator AddSubject(AddSubjectPayload subject, Action<string> callback)
+    public IEnumerator AddSubject(AddSubjectPayload subject, Action<string> callback, Action<int> OnSuccess)
     {
         string body = JsonUtility.ToJson(subject);
 
@@ -91,12 +67,45 @@ public class WebManager : MonoBehaviour
             if (webreq.result == UnityWebRequest.Result.Success)
             {
                 res = webreq.downloadHandler.text;
+
+                GotSubjects subjectPayload = new GotSubjects();
+                subjectPayload = JsonUtility.FromJson<GotSubjects>(res);
+
+                callback(subjectPayload.status);
+                OnSuccess(subjectPayload.subjectID);
             }
             else
             {
                 res = "Connection Issue";
+                callback(res);
             }
-            callback(res);
+            
+        }
+    }
+
+    public IEnumerator DeleteSubject(int id, Action OnSuccess)
+    {
+       DeletePayload payload = new DeletePayload();
+        payload.id = id;
+
+        string body = JsonUtility.ToJson(payload);
+
+        using (UnityWebRequest webreq = UnityWebRequest.Post(host + deleteSubject, body, "application/json"))
+        {
+            yield return webreq.SendWebRequest();
+
+            string res = string.Empty;
+
+            if (webreq.result == UnityWebRequest.Result.Success)
+            {
+                res = webreq.downloadHandler.text;
+
+                DeleteResponse response = JsonUtility.FromJson<DeleteResponse>(res);
+
+                if(response.status == "success")
+                OnSuccess();
+            }
+
         }
     }
 

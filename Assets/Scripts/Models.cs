@@ -27,6 +27,7 @@ public class GotSubjects
     public SubjectData[] subjectData;
     public string msg;
     public string status;
+    public int subjectID;
 }
 
 [System.Serializable]
@@ -57,12 +58,6 @@ public class AddedResponse
 public class DeletePayload
 {
     public int id;
-
-    public string status;
-    public string msg;
-
-    // Error Message if fail
-    public string e;
 }
 
 [System.Serializable]

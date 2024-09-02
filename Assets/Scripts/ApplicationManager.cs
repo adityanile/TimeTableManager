@@ -8,7 +8,10 @@ public class ApplicationManager : MonoBehaviour
     public static ApplicationManager instance;
 
     [SerializeField]
-    private List<SubjectData> subjects = new List<SubjectData>();
+    public List<SubjectData> subjects = new List<SubjectData>();
+
+    public string teacherName = "";
+    public string dayofweek = "";
 
     // Start is called before the first frame update
     void Start()
@@ -23,24 +26,22 @@ public class ApplicationManager : MonoBehaviour
         return;
     }
 
-    public void InitSubjects(string subjectsJson, Action<String> callback)
+    public void InitSubjects(string subjectsJson, Action<String> callback, Action OnSuccess)
     {
         if (subjectsJson != null)
         {
-            Debug.Log(subjectsJson);
-
             var gotSubjects = JsonUtility.FromJson<GotSubjects>(subjectsJson);
 
-            if (gotSubjects.msg.Equals("No Data Found"))
+            if (gotSubjects.status.Equals("fail"))
             {
                 callback(gotSubjects.msg);
-                return;
             }
             else
             {
                 subjects.AddRange(gotSubjects.subjectData);
                 callback("Success !!");
             }
+                OnSuccess();
         }
         else
         {
