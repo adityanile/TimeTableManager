@@ -17,7 +17,7 @@ public class WebManager : MonoBehaviour
     private string deleteSubject = "api/deleteSubject";
     private string addSubject = "api/addSubject";
 
-    public WebManager instance;
+    public static WebManager instance;
         
     private void Start()
     {

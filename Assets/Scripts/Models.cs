@@ -9,7 +9,7 @@ public class SubjectData
     public string branch;
     public string teachername;
     public string classroom;
-    public string dayofWeek;
+    public string dayofweek;
 }
 
 [System.Serializable]
