@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class ApplicationManager : MonoBehaviour
@@ -41,11 +41,42 @@ public class ApplicationManager : MonoBehaviour
                 subjects.AddRange(gotSubjects.subjectData);
                 callback("Success !!");
             }
-                OnSuccess();
+            OnSuccess();
         }
         else
         {
             callback("Error Connecting server");
         }
     }
+
+
+    // Managing Local storage for the application
+    public void SaveToLocalStorage(string Tname, Action OnSuccess)
+    {
+        string path = Path.Join(Application.persistentDataPath, "initial.json");
+
+        LocalStorageModel local = new LocalStorageModel();
+        local.tName = Tname;
+
+        string json = JsonUtility.ToJson(local, true);
+        File.WriteAllText(path, json);
+
+        OnSuccess();
+    }
+
+    public string LocalTeacherName()
+    {
+        string path = Path.Join(Application.persistentDataPath, "initial.json");
+
+        if (File.Exists(path))
+        {
+            string text = File.ReadAllText(path);
+            LocalStorageModel model = JsonUtility.FromJson<LocalStorageModel>(text);
+
+            return model.tName;
+        }
+        else
+            return string.Empty;
+    }
+
 }

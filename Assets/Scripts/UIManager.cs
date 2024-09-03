@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -18,6 +19,9 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        // Here Retrieve teacher's Name in local storage
+        teacherName.text = ApplicationManager.instance.LocalTeacherName();
+
         if (instance == null)
         {
             instance = this;
@@ -34,25 +38,40 @@ public class UIManager : MonoBehaviour
         string tName = teacherName.text;
         string day = DateTime.Now.DayOfWeek.ToString();
 
-        // Intialising Data for main application
-        ApplicationManager.instance.teacherName = tName;
-        ApplicationManager.instance.dayofweek = day;
+        // Remove white spaces
+        tName.Trim();
 
-        StartCoroutine(ShowMsg("Loading..."));
-
-        StartCoroutine(WebManager.instance.FetchSubjects(day, tName, (s) =>
+        if (tName != "")
         {
-            // When we get subject data then
-            ApplicationManager.instance.InitSubjects(s, (m) =>
-            {
-                StartCoroutine(ShowMsg(m));
-            }, OnSuccess: () =>
-            {
-                initialUI.SetActive(false);
-                mainUI.SetActive(true);
-            });
+            // Intialising Data for main application
+            ApplicationManager.instance.teacherName = tName;
+            ApplicationManager.instance.dayofweek = day;
 
-        }));
+            StartCoroutine(ShowMsg("Loading..."));
+
+            StartCoroutine(WebManager.instance.FetchSubjects(day, tName, (s) =>
+            {
+                // When we get subject data then
+                ApplicationManager.instance.InitSubjects(s, (m) =>
+                {
+                    StartCoroutine(ShowMsg(m));
+                }, OnSuccess: () =>
+                {
+                    ApplicationManager.instance.SaveToLocalStorage(teacherName.text, () =>
+                    {
+                        Debug.Log("Data Writting Successful");
+                    });
+
+                    initialUI.SetActive(false);
+                    mainUI.SetActive(true);
+                });
+
+            }));
+        }
+        else
+        {
+            StartCoroutine(ShowMsg("Enter Teacher Name"));
+        }
     }
 
     public void EnableAddSubjectsUI()

@@ -22,7 +22,6 @@ public class AddNewSubject : MonoBehaviour
     {
         Init();
     }
-
     private void Init()
     {
         name.text = "";
@@ -48,6 +47,12 @@ public class AddNewSubject : MonoBehaviour
 
         addsub.dayofWeek = dayOfWeek.options[dayOfWeek.value].text;
 
+        if (!ValidateSubject(addsub))
+        {
+            StartCoroutine(UIManager.instance.ShowMsg("Enter Valid Details"));
+            return;
+        }
+
         StartCoroutine( WebManager.instance.AddSubject(addsub, (s) =>
         {
             StartCoroutine(UIManager.instance.ShowMsg(s));
@@ -71,5 +76,16 @@ public class AddNewSubject : MonoBehaviour
             UIManager.instance.mainUI.SetActive(true);
             UIManager.instance.AddlecUi.SetActive(false);
         }));
+    }
+
+    public bool ValidateSubject(AddSubjectPayload s)
+    {
+        if(s.name.Equals("")) return false;
+        if(s.length.Equals("")) return false;
+        if(s.division.Equals("")) return false;
+        if(s.classroom.Equals("")) return false;
+        if(s.startTime.Equals("")) return false;
+
+        return true;
     }
 }

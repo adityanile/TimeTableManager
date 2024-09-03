@@ -70,3 +70,9 @@ public class DeleteResponse
     public string e;
 }
 
+[System.Serializable]
+public class LocalStorageModel
+{
+    public string tName;
+}
+
