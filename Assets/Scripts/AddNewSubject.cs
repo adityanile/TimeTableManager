@@ -42,20 +42,20 @@ public class AddNewSubject : MonoBehaviour
         addsub.startTime = startTime.text;
         addsub.division = division.text;
         addsub.branch = department.text;
-        addsub.teacherName = ApplicationManager.instance.teacherName;
+        addsub.teacherName = ApplicationManager.instance.teacherName.ToLower();
         addsub.classroom = classroom.text;
 
         addsub.dayofWeek = dayOfWeek.options[dayOfWeek.value].text;
 
         if (!ValidateSubject(addsub))
         {
-            StartCoroutine(UIManager.instance.ShowMsg("Enter Valid Details"));
+            UIManager.instance.ShowMsg("Enter Valid Details");
             return;
         }
 
         StartCoroutine( WebManager.instance.AddSubject(addsub, (s) =>
         {
-            StartCoroutine(UIManager.instance.ShowMsg(s));
+            UIManager.instance.ShowMsg(s);
         }, OnSuccess : (id)=>
         {
             SubjectData sub = new SubjectData
@@ -71,6 +71,8 @@ public class AddNewSubject : MonoBehaviour
                 dayofweek = addsub.dayofWeek
             };
             
+            // Add Only those subjects that have this day
+            if(sub.dayofweek == ApplicationManager.instance.dayofweek)
             ApplicationManager.instance.subjects.Add(sub);
 
             UIManager.instance.mainUI.SetActive(true);

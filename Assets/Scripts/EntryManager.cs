@@ -20,7 +20,7 @@ public class EntryManager : MonoBehaviour
         this.branch.text = branch;
         this.duration.text = duration + " hr";
         this.division.text = division;
-        this.classroom.text = classroom;
+        this.classroom.text = "Location: " + classroom;
         this.startTime.text = time;
     }
 
@@ -34,7 +34,7 @@ public class EntryManager : MonoBehaviour
             UIManager.instance.mainUI.SetActive(false);
             UIManager.instance.mainUI.SetActive(true);
 
-            StartCoroutine(UIManager.instance.ShowMsg("Deletion Successful"));
+            UIManager.instance.ShowMsg("Deletion Successful");
         }));
     }
 }

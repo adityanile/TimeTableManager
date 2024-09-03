@@ -66,6 +66,6 @@ public class MainUIManager : MonoBehaviour
             sum += s.length;
         }
         Slider.value = sum/totalWorking;
-        workhour.text = $"{sum} : {totalWorking} hrs";
+        workhour.text = $"Today's Workload : {sum} : {totalWorking} hr";
     }
 }

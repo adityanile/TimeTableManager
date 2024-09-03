@@ -74,7 +74,6 @@ public class WebManager : MonoBehaviour
                 res = "Connection Issue";
                 callback(res);
             }
-            
         }
     }
 

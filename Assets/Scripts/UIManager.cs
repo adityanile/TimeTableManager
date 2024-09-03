@@ -1,14 +1,13 @@
 using System;
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     public GameObject initialUI;
     public GameObject mainUI;
-        
+
     public TMP_InputField teacherName;
 
     public GameObject AddlecUi;
@@ -39,7 +38,7 @@ public class UIManager : MonoBehaviour
         string day = DateTime.Now.DayOfWeek.ToString();
 
         // Remove white spaces
-        tName.Trim();
+        tName = tName.Trim();
 
         if (tName != "")
         {
@@ -47,19 +46,21 @@ public class UIManager : MonoBehaviour
             ApplicationManager.instance.teacherName = tName;
             ApplicationManager.instance.dayofweek = day;
 
-            StartCoroutine(ShowMsg("Loading..."));
+            ShowMsg("Loading...");
+            
+            tName = tName.ToLower();
 
             StartCoroutine(WebManager.instance.FetchSubjects(day, tName, (s) =>
             {
                 // When we get subject data then
                 ApplicationManager.instance.InitSubjects(s, (m) =>
                 {
-                    StartCoroutine(ShowMsg(m));
+                    ShowMsg(m);
                 }, OnSuccess: () =>
                 {
                     ApplicationManager.instance.SaveToLocalStorage(teacherName.text, () =>
                     {
-                        Debug.Log("Data Writting Successful");
+
                     });
 
                     initialUI.SetActive(false);
@@ -70,7 +71,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            StartCoroutine(ShowMsg("Enter Teacher Name"));
+            ShowMsg("Enter Teacher Name");
         }
     }
 
@@ -80,7 +81,12 @@ public class UIManager : MonoBehaviour
         AddlecUi.SetActive(true);
     }
 
-    public IEnumerator ShowMsg(string m)
+    public void ShowMsg(string msg)
+    {
+        StartCoroutine(DisplayMsg(msg));
+    }
+
+    IEnumerator DisplayMsg(string m)
     {
         msg.text = m;
         yield return new WaitForSeconds(3);
